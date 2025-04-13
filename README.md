@@ -6,5 +6,13 @@ An AI-powered surveillance system designed for ATM security, face recognition, a
 
 ---
 
-## 📁 Project Structure
+## 🚀 Features
 
+- 🎯 Face Recognition (via `face_recognition`)
+- 🕵️ Motion Detection using OpenCV
+
+
+---
+
+
+pip install -r requirements.txt
