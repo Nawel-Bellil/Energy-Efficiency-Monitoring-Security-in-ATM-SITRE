@@ -1,0 +1,6 @@
+- Motion Detection - Detects movement in video frames using background subtraction
+- Face Detection/Recognition - Identifies known faces and flags unknown ones
+- Modular Architecture - Clean separation of concerns across different modules
+- Configurable - Settings controlled via config.env file
+- Logging - Events are logged with timestamps
+- ROI Support - Can monitor specific regions of interest
