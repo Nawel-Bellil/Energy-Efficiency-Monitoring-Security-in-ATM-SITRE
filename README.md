@@ -1,5 +1,4 @@
 # AI Surveillance System
-**Version: 1.2**  
 **Last Updated: July 06, 2025**  
 **Author: Nawel-Bellil**
 
