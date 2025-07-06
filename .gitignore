@@ -1,2 +1,47 @@
 # Ignore the entire dataset folder
 /AI-surveillance-system/lfw labeled faces in the wild/
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+
+# Environments
+*.env
+.env
+config.env
+enviroment.yaml
+
+# Logs and outputs
+*.log
+security_log.txt
+
+# Surveillance system
+AI-surveillance-system/known_faces/
+AI-surveillance-system/models/
+AI-surveillance-system/surveillance_footage/
+
+# Notebooks output cache
+.ipynb_checkpoints/
+
+# Data files
+hardwareanomaly/data/
+solarpanel/data/
+
+# VSCode settings
+.vscode/
+
+# Conda
+*.conda
+*.lock
+# Virtual environments
+venv/
+AI-surveillance-system/venv/
+
+AI-surveillance-system/known_faces
