@@ -239,49 +239,46 @@ def save_face_encoding(face_img, name, known_faces_path='known_faces'):
     """
     global face_recognition_loaded, known_face_encodings, known_face_names
     
-    # Check if face recognition is available
     if not face_recognition_loaded and not load_face_recognition():
         log_event("ERROR", "Face recognition not available. Cannot add face.")
         return False
     
-    # Ensure directory exists
-    ensure_directory(known_faces_path)
+    if len(face_img.shape) == 3 and face_img.shape[2] == 3:
+        rgb_img = cv2.cvtColor(face_img, cv2.COLOR_BGR2RGB)
+    else:
+        rgb_img = face_img
     
-    try:
-        # Convert BGR to RGB (face_recognition uses RGB)
-        if len(face_img.shape) == 3 and face_img.shape[2] == 3:
-            rgb_img = cv2.cvtColor(face_img, cv2.COLOR_BGR2RGB)
-        else:
-            rgb_img = face_img
-            
-        # Detect face locations
-        face_locations = face_recognition.face_locations(rgb_img)
-        
-        if not face_locations:
-            log_event("ERROR", "No face detected in the image")
-            return False
-            
-        # Use the first detected face
-        face_encoding = face_recognition.face_encodings(rgb_img, [face_locations[0]])[0]
-        
-        # Add to known faces
-        known_face_encodings.append(face_encoding)
-        known_face_names.append(name)
-        
-        # Save face image to disk
-        filename = f"{name.lower().replace(' ', '_')}.jpg"
-        filepath = os.path.join(known_faces_path, filename)
-        cv2.imwrite(filepath, face_img)
-        
-        # Update encodings file
-        encodings_file = os.path.join(known_faces_path, "face_encodings.pickle")
-        data = {"encodings": known_face_encodings, "names": known_face_names}
-        with open(encodings_file, "wb") as f:
-            pickle.dump(data, f)
-            
-        log_event("INFO", f"Added {name} to known faces database")
-        return True
-        
-    except Exception as e:
-        log_event("ERROR", f"Failed to add face: {str(e)}")
+    face_locations = face_recognition.face_locations(rgb_img)
+    if not face_locations:
+        log_event("ERROR", "No face detected in the image")
         return False
+    
+    face_encoding = face_recognition.face_encodings(rgb_img, [face_locations[0]])[0]
+    
+    # Load existing encodings if they exist
+    encodings_file = os.path.join(known_faces_path, "face_encodings.pickle")
+    if os.path.exists(encodings_file):
+        with open(encodings_file, "rb") as f:
+            data = pickle.load(f)
+            known_face_encodings = data["encodings"]
+            known_face_names = data["names"]
+    else:
+        known_face_encodings = []
+        known_face_names = []
+    
+    # Append new encoding and name
+    known_face_encodings.append(face_encoding)
+    known_face_names.append(name)
+    
+    # Save face image
+    filename = f"{name.lower().replace(' ', '_')}.jpg"
+    filepath = os.path.join(known_faces_path, filename)
+    cv2.imwrite(filepath, face_img)
+    
+    # Save updated encodings
+    data = {"encodings": known_face_encodings, "names": known_face_names}
+    with open(encodings_file, "wb") as f:
+        pickle.dump(data, f)
+    
+    log_event("INFO", f"Added {name} to known faces database")
+    return True
